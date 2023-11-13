@@ -14,7 +14,7 @@ public class SalesContract extends Contract{
         this.processingFee = processingFee;
         this.financeOption = financeOption;
     }
-public double getProcessingFee(){
+public double getprocessingFee(){
         if (getVehicle().getPrice()<1000) {
             processingFee= 295;
         }

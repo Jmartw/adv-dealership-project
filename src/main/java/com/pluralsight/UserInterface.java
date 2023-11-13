@@ -26,6 +26,7 @@ public class UserInterface {
             System.out.println("7. Get all vehicles");
             System.out.println("8. Add vehicle");
             System.out.println("9. Remove vehicle");
+            System.out.println("10. Create Contract");
             System.out.println("99. Quit");
 
             System.out.print("Enter your choice: ");
@@ -58,6 +59,9 @@ public class UserInterface {
                     break;
                 case "9":
                     processRemoveVehicleRequest();
+                    break;
+                case "10"
+                    processCreateContract();
                     break;
                 case "99":
                     quit = true;
@@ -192,6 +196,69 @@ public class UserInterface {
         for (Vehicle vehicle : vehicles) {
             System.out.println(vehicle.toString());
         }
+    }
+    private void processCreateContract(){
+        List<Vehicle> vehicle = dealership.getAllVehicles();
+
+        System.out.println("Create contract: ");
+        System.out.println("Enter type of contract: ");
+        String type = scanner.nextLine();
+
+        System.out.println("Enter date: ");
+        String date = scanner.nextLine();
+
+        System.out.println("Enter Customer name: ");
+        String name = scanner.nextLine();
+
+        System.out.println("Enter Customer Email: ");
+        String email = scanner.nextLine();
+
+        System.out.println("Enter vehicle VIN: ");
+        int VIN = scanner.nextInt();
+        scanner.nextLine();
+
+        Vehicle vehicle = null;
+        for (Vehicle v:vehicles){
+            if (v.getVin() == VIN ) {
+                vehicle = v;
+                break;
+            }
+            else {
+                System.out.println("Invalid VIN.");
+            }
+        }
+        if (type.equalsIgnoreCase("lease")){
+            LeaseContract contract = new LeaseContract(date, name, email, vehicle);
+
+            //Save contract
+            ContractFileManager cfm = new ContractFileManager();
+            cfm.saveContract(contract);
+
+            //Sale contract
+        } else if (type.equalsIgnoreCase("sale")) {
+            System.out.println("Will vehicle be financed?");
+            String financeOption = scanner.nextLine();
+            boolean isFinanced = false;
+            if (financeOption.equalsIgnoreCase("yes")){
+                isFinanced = true;
+            }
+
+            SalesContract contract = new SalesContract(date, name, email, vehicle, isFinanced);
+
+            //save contract
+            ContractFileManager cfm = new ContractFileManager();
+            cfm.saveContract(contract);
+        } else {
+            System.out.println("Invalid Input.");
+        }
+
+        //remove vehicle
+        processRemoveVehicleRequest();
+
+        //update dealership
+        DealershipFileManager dfm = new DealershipFileManager();
+        dfm.saveDealership(dealership);
+
     }
 
 }
